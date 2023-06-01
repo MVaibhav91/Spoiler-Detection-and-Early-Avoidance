@@ -1,0 +1,26 @@
+<div class="shadow-sm border px-3">
+  <div class="card-body">
+    Search results
+  </div>
+  <div>
+    {% if data.status %}
+    {% for movie in data.result %}
+    <div data-id="{{movie[0]}}" onClick="fetchReview(event)" >
+      <a data-id="{{movie[0]}}" class="result mb-1 d-flex rounded text-decoration-none">
+        <div class="col-3">
+          <img src="{{movie[3]}}">
+        </div>
+        <div class="col-9 px-1">
+          <div class="py-1" data-id="{{movie[0]}}">{{movie[1]}}</div>
+          <div class="text-muted small">{{movie[2]}}</div>
+        </div>
+      </a>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="text-muted fw-500 text-center">
+      No movies to search
+    </div>
+    {% endif %}
+  </div>
+</div>

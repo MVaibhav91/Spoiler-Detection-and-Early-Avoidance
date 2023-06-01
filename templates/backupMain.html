@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <style>
+        .form-control:focus{
+            box-shadow: none;
+            outline: none;
+        }
+        .btn:focus,.btn:active{
+            box-shadow: none;
+            outline: none;
+        }
+        .comment-box{
+          resize: None;
+          height: 200px;
+          border: None;
+        }
+        .comment-form{
+          border-radius: 20px; 
+          overflow: hidden;
+        }
+        .btn-ex{
+          background: #8E44AD;
+          font-weight: 500;
+          border-radius: 0 0 20px 20px;
+          width: 100%;
+        }
+        .text-ex{
+          /* color: #8E44AD; */
+          font-weight: bold;
+          background: -webkit-linear-gradient(#F31223, #CF0808);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+        .opacity-25{
+          position: relative;
+        }
+        .loader{
+          position: absolute;
+          top:50%;
+          z-index: 1;
+          left: 50%;
+          transform: translate(-50%,-50%);
+          font-weight: bold;
+        }
+        .bg-dark{
+          color: white;
+        }
+        .sidebox .result:hover{
+          cursor: pointer;
+          background-color: rgb(46, 45, 45);
+          /* box-shadow: 0 0 1px rgba(255, 255, 255, 0.901);  */
+        }
+        .sidebox .search-results img{
+          width: 100%;
+          height: 84px;
+          object-fit: cover;
+        }
+        .fw-500{
+          font-weight: 500;
+        }
+        .show img{
+          max-width: 100%;
+          max-height: 300px;
+          object-fit: contain;
+        }
+        .menu{
+          position: fixed;
+          top: 0;
+          left: 50%;
+          right: 50%;
+          transform: translate(-50%);
+          z-index: 100;
+        }
+        .main{
+          margin-top: 10%;
+        }
+        .sideblock{
+          position: fixed;
+          top: 16%;
+          bottom: 9%;
+          left: 5%;
+          height: 80%;
+          overflow-Y: scroll;
+          /* margin-top: %; */
+          width: 25%;
+          z-index: 100;
+          
+        }
+        .sideblock .result:hover{
+          cursor: pointer;
+          background-color: rgb(46, 45, 45);
+          /* box-shadow: 0 0 1px rgba(255, 255, 255, 0.901);  */
+        }
+        .sideblock .search-results img{
+          width: 100%;
+          height: 84px;
+          object-fit: cover;
+        }
+    </style>
+  </head>
+  <body class="bg-dark">
+
+    <!-- Top menu container -->
+    <div class="container-fluid py-4 menu bg-dark shadow-sm">
+      <div class="row">
+        <h2 class="text-ex col-md-4 text-center">Spoiler Detection</h2>
+        <div class="col-md-4">
+          <form class="input-group mb-3" id="search_movie">
+            <input type="text" class="form-control rounded-pill bg-dark text-white" placeholder="Search Movie" id="search_input">
+          </form>
+        </div>
+      </div>
+
+      <script type="text/javascript">
+
+        const search = document.getElementById('search_movie');
+        search.addEventListener('submit', function(event) {
+          event.preventDefault();
+          const input = document.getElementById('search_input').value;
+          console.log("searching for"+input);
+          const result = fetchResult(input);
+        });
+
+        function fetchResult(query){
+          const xhr = new XMLHttpRequest();
+          xhr.open('GET', "/"+query);
+          displayLoader(document.getElementsByClassName('search-results')[0],1);
+          xhr.onload = function(){
+            if (xhr.status === 200) {
+              const response = JSON.parse(xhr.responseText);
+              page = response.page
+              displayLoader(document.getElementsByClassName('search-results')[0],0);
+              document.getElementsByClassName('search-results')[0].innerHTML = page;
+              console.log(response);
+              console.log(page);
+            } else{
+              displayLoader(document.getElementsByClassName('search-results')[0],0);
+              console.log("Some error occured");
+            }
+          }
+          xhr.send();
+        }
+
+      </script>
+    </div>
+    <div class="container search-results sideblock shadow-sm rounded p-2 bg-dark">
+      <div class="loader d-none">
+        Please wait...
+      </div>
+    </div>
+
+
+
+    <div class="container main">
+      <div class="row container">
+      <!-- row container starts -->
+
+
+        <!-- Side col-4 -->
+        <div class="col-4 p-2 sidebox position-relative">
+          <div class="card border-0">
+            <div class="card-body bg-dark">
+              <!-- modified cancelled -->
+
+              <!-- <form class="d-flex" method="GET" action="{{ url_for('getMovieNames') }}">
+                <input name="query" class="form-control search-query me-2 rounded-pill bg-dark text-white" type="search" placeholder="Search movies" aria-label="Search">
+              </form> -->
+
+              <!-- <div class="search-results my-2 rounded"> -->
+                <!-- modified cancelled -->
+
+                <!-- <div class="card-body px-0">
+                  Search results
+                </div>
+
+                <a href="/movie/tt4158110" class="result mb-1 d-flex rounded text-decoration-none text-white">
+                  <div class="col-2">
+                    <img src="https://m.media-amazon.com/images/M/MV5BM2QyNDIzOGMtNThhNS00NmUwLWI0ZjUtZjdkN2I1OTRjZWQ3XkEyXkFqcGdeQXVyNzQ1ODk3MTQ@._V1_UY98_CR1,0,67,98_AL_.jpg">
+                  </div>
+                  <div class="col-10 px-1">
+                    <div class="py-1">Mr. Robot</div>
+                    <div class="text-muted small">(2015–2019)</div>
+                  </div>
+                </a>
+                <a href="/movie/tt4158110" class="result mb-1 d-flex rounded text-decoration-none text-white">
+                  <div class="col-2">
+                    <img src="https://m.media-amazon.com/images/M/MV5BM2QyNDIzOGMtNThhNS00NmUwLWI0ZjUtZjdkN2I1OTRjZWQ3XkEyXkFqcGdeQXVyNzQ1ODk3MTQ@._V1_UY98_CR1,0,67,98_AL_.jpg">
+                  </div>
+                  <div class="col-10 px-1">
+                    <div class="py-1">Mr. Robot</div>
+                    <div class="text-muted small">(2015–2019)</div>
+                  </div>
+                </a>
+                <a href="/movie/tt4158110" class="result mb-1 d-flex rounded text-decoration-none text-white">
+                  <div class="col-2">
+                    <img src="https://m.media-amazon.com/images/M/MV5BM2QyNDIzOGMtNThhNS00NmUwLWI0ZjUtZjdkN2I1OTRjZWQ3XkEyXkFqcGdeQXVyNzQ1ODk3MTQ@._V1_UY98_CR1,0,67,98_AL_.jpg">
+                  </div>
+                  <div class="col-10 px-1">
+                    <div class="py-1">Mr. Robot</div>
+                    <div class="text-muted small">(2015–2019)</div>
+                  </div>
+                </a>
+
+                {% if data.status %}
+                {% for movie in data.result %}
+                <a href="{{ url_for('fetchMovie',id=movie[0]) }}" class="result mb-1 d-flex rounded text-decoration-none text-white">
+                  <div class="col-2">
+                    <img src="{{movie[3]}}">
+                  </div>
+                  <div class="col-10 px-1">
+                    <div class="py-1">{{movie[1]}}</div>
+                    <div class="text-muted small">{{movie[2]}}</div>
+                  </div>
+                </a>
+                {% endfor %}
+                {% else %}
+                <div class="text-muted fw-500 text-center">
+                  No movies to search
+                </div>
+                {% endif %} -->
+              <!-- </div> -->
+            </div>
+          </div>
+        </div>
+        <!-- side col 4 ends -->
+
+        <!-- Comment col-8 -->
+        <div class="col-8 p-2">
+          <div class="card card-body bg-dark show shadow">
+            {% if data.status %}
+            <div class="row my-2">
+              <div class="col-8">
+                <div class="show-title h3">
+                  {{data.title}}
+                </div>
+                {% if data.rating %}
+                <div class="d-flex">
+                  <span class="text-primary fw-500 pe-2">{{data.rating[0]}}</span>
+                  <span class="pe-2 text-muted">({{data.rating[1]}})</span>
+                </div>
+                {% endif %}
+                <div class="py-2">
+                  <p>{{data.plot}}</p>
+                </div>                 
+              </div>
+              <div class="col-4">
+                <img src="{{data.poster}}">
+              </div>
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="reviews mt-4">
+
+
+            <!-- <div>
+              <div class="p-2">
+      
+                <div class="reviews mt-4">
+                    
+                    
+                    <div class="review card-body border rounded mb-2">
+                      
+                      <div class="review-text">
+                        ('Two years ago when this show debuted, I was absolutely captivated and found season one incredibly intoxicating and compelling. Many shows try to capture this series theme, but many fail to execute it as well as Dark does.I believe Dark does it so well because the characters are so emotionally grounded. The writer\'s didn\'t overlook the shows characters and have special places for each one.For those like me that love the concept of time travel and paradoxes, this show is like a stimulant to the brain and tickles your mind. It\'s mental munchies and also serves as mental foreplay.Season 2 finally scratches that itch at the roof of your mouth that for so long, your tongue couldn\'t quite reach.This season proves that the writer\'s know exactly what their doing. The way this show deals with the "time-travel paradox" is utterly flawless. I realize how hard it is to get it right and not have so many plot holes and terrible plot devices and that\'s why I appreciate this show so much.Dark is on another level than anything I\'ve ever seen before!This series is a masterpiece, there\'s no doubt about it. It provides an incredible reward for viewers that love celebral shows that refuse spoon feeding the audience and also satisfies the viewer by addressing the questions you have by answering them, and then raising many more with twist after twist, reveal after reveal.I now fear I will fall into the inevitable show hole because really, where is there to go from here; devouring this exceptional series. It raises the standard of quality among TV and sits amongst the top.I\'m in love with the storytelling and how it engages us to think about all the connections and guess what\'s what, and even if you may predict something, the show then blows your mind.I applaud the writers of this series for not only getting this theme so right, but imo, also perfecting it and upping the ante for shows to come. I only hope this show serves as inspiration for creators.After season 2, Dark has officially become one of my favorite shows and bravo to Germany for producing this groundbreaking hit.Those that have doubts that it will not live up to the quality of season 1, fear not! The second season has a faster pace and expands on what\'s so very intriguing. That\'s what this show does so well: it\'s intriguing as ever to the very end!\nAfter witnessing how well the writers deal with every loose thread this season, I have great confidence that they will meet, my now, high expectations with the third and final season and tie it up nicely for fans satisfaction.10/102019 has produced truly great shows and Dark is amongst the top.', True)
+                      </div>
+                    </div>
+                    
+                    <div class="review card-body border rounded mb-2">
+                      <div class="review-text">
+                        ("This feedback is currently based on the first 10 episodes of season one (still watching the series as we speak), and to be honest it made me downgrade my rating for 'Stranger Things' quite a bit. It's clear that this series is the child of a genius - everything just works. The acting is great, the cinematography is great, the soundtrack is awesome (reminds me of Klaus Schulze at times), and the story-line is mind-boggling. This series is just miles above anything that leaves Hollywood. Wish that all productions could be like this. Thanks Netflix for bringing this awesome series to me screen. Say bye-bye to public television!", False)
+                      </div>
+                    </div>
+                    
+                    <div class="review card-body border rounded mb-2">
+                      <div class="review-text">
+                        ('People are instantly put off watching Dark by the most ridiculous of stigmas - subtitles. Entirely produced in German, viewers use the feeble excuse of "I don\'t like reading and watching at once" as a valid argument for why they don\'t watch something like this. I will say now, that if this is your reason for not continuing with this show, then you are an idiot. Dark is some of the most gripping, most shocking and most amazing television I have ever seen; to compare it to another show, it gives me the same feeling of anticipation as Game of Thrones did back in the glory days. The only reason I haven\'t given it a 10 is because the third and final season is yet to be released, but I don\'t think this show can put a foot wrong.The story starts simply enough, but it spirals and develops like nothing else: in the small German town of Winden, the disappearance of a child rekindles memories of a similar incident 33 years before. Embroiled in this story are four main families, each with their own secrets to hide and motives to act. At the centre of it all is a mysterious cave, a nuclear power plant, and a time-traveller who brings more questions than answers. This, however, is not a sci-fi heavy, pothole-riddled story, but a genuinely brilliant drama about family ties, and their effect on the past and future.Time travel is often overwrought in cinema, struggling with clashing alternative storylines and people\'s actions not making any sense. Dark is magical in that this isn\'t an issue, and altering the past isn\'t something the show leans on for shock factor. Instead, the real mysteries are all in the present, and people\'s backstories are crucial in understanding the overarching plot. No character is wasted, and no conversation or action is not carefully considered in the grand scheme of things.The acting is phenomenal, and arguably the best I have ever seen in a large-scale production. This German cast should be internationally renowned, as every character (from the children to the elderly) is exceptionally cast and portrayed. My personal favourite would have to be Oliver Masucci (Ulrich), an unwavering but troubled policeman at the heart of the issue, but completely without answers. The resemblances between future and past selves is uncanny; the person responsible for casting each character should be given a knighthood, as this quality creates a cohesion between time periods that is so often unattainable.One of the most underrated qualities of Dark (and an issue that American/British productions are routinely guilty of) is that the characters themselves are not annoying. Let me reiterate this: when one character has information that another would benefit from, or if there\'s a general consensus that for safety, people should know something, they tell one another. Mother knows something dark about their husband? They tell their kids. Police officer working outside the parameters of the job finds a lead? They let their partner know. This is what\'s necessary to elevate television from decent to truly believable - scriptwriting that makes sense.The music, cinematography and period clothing is amazing, but almost goes without saying, given Dark\'s overflowing quality. No timeframe looks inconceivable, and the devoted set design means different iterations of buildings and characters look as you would expect. There are two integral pieces of music: one a piercing violin piece for the shock factor, and the other a Eurotrash record that becomes foreshadowing background noise. The production does use some CGI, but sparingly, a mercy that several other big-budget pieces could have learned from. By not overusing the effects, they are spectacular when you do finally see something revelatory.Dark should be Netflix\'s giant killer show alongside Stranger Things, but the stubborn nature of the average audience member means this show has become under appreciated. Regardless, I defy anyone to not enjoy this programme for its brilliance; I am yet to see something alternative that would rival what I have just watched. The final season arrives in 2020, and I firmly believe it will be some of the best television ever broadcast. Personally, I cannot wait.EDIT: Having now seen the final series, this is a 10. They did it justice. Benioff and Weiss, take note.', True)
+                      </div>
+                    </div>
+                    
+                    <div class="review card-body border rounded mb-2">
+                      <div class="review-text">
+                        ('I wish, there were more writers like this. It is spellbinding how good it is. A bit hard to follow at first, but if you stay with it. You will be rewarded with, what I think, in my humble opinion, is the best show I have ever seen. It tackles time and parallel universes like never before. So sad it is over. But so happy I was able to witness this amazing creation. Anyone who gives this show negative reviews, I guess, that is their opinion. But. If you are a fan of science fiction and drama. This is the show for you. It all gets explained in the last season. And. It is a fantastic ending. Love this show. Will watch all three seasons again. Do not miss this show.', True)
+                      </div>
+                    </div>
+                    
+                    <div class="review card-body border rounded mb-2">
+                      <div class="review-text">
+                        ("I can't agree with the reviewer before me. They are not trying to copy Stranger Things, and I don't want to go into 'copying' at all - because Stranger Things has parallels to a few games, movies and books that have been popular before it was even in the making.'Dark' is slow paced in the beginning, but it keeps you on the edge of your seat. It is tense, the cinematography and acting is great. There is so much more depth to it than the mentioned Stranger Things. It's not bloated with special effects and didn't have a Hollywood budget. This is how TV should be. It has got a Donnie Darko feeling to it.I guess the majority of people complaining about the pace would also complain about Blade Runner 2049 or Interstellar...so please, just stick to Marvel movies. :)", False)
+                      </div>
+                    </div>
+                    
+                    <div class="review card-body border rounded mb-2">
+                      <div class="review-text">
+                        ('THIS is the best fking tv show I\'ve seen since true detective\'s first season. I can\'t believe how good it is. Beautiful photography, scenarios, costumes, thrilling atmospheric music (gives the chills!!), amazing performances and above everything: perfect beautifully (wunderbar!) storyline. This is the freaking example, Hollywood. You don\'t need lots of money and Fx to do a decent story (or in this case, a poetic masterpiece). You just have to portray it, with every resource you have: visually, musically, with dialogue (but not the only one, don\'t abuse it!).Every separate plot it\'s intrincally intertwined. It happens so smoothly it\'s never forced. Anything. As long as I can remember I never had a "cringe" moment like most shows has. In every episode i was at the edge of my seat. This is how you make a thriller, please, PLEAAAASE take a note, storywriters. I\'m so sad we probably have to wait a year or more to see the possible season 2. I don\'t have the proper words, it\'s been an amazing delightful surprise to have the pleasures to see this. Also, German it\'s one of the most beautiful languages, I love hearing it! We have such dense Nitzschean philosophy everywhere, I could totally smell the darkness. I love this kind of stories, with time travel and meaning of life as a central subject of the story. Determinism? Free will?. Maybe this is why I loved it so much. This show never treats its public with disrespect. They tell you what you need to know when it\'s appropriate. I love it.Never an American production could make this dark nihilist hell. I\'m glad Netflix is giving us a new cinematic adventure, never could been better. I think it\'s netflix\' best show ever made. Yeah, not even your super loved- big fan base- stranger things does justice to this beautiful masterpiece. Not. even. close. Leave it for the children.In a word: Perfection!! I hope keep seeing this quality Netflix!', True)
+                      </div>
+                    </div>
+                    
+                    <div class="review card-body border rounded mb-2">
+                      <div class="review-text">
+                        ("Insanely good, every episode shocks you in ways you never thought was possible. The constant gripping revelations were so unexpected but tied the story so well together. Exceptional and convincing acting skills by the entire cast and tons of heartfelt scenes between different character dynamics. This show is the perfect epitome of a well thought out show, meticulously crafted and executed so well and overall knows where it's trying to advance it's story. This show has revolutionized time travel storytelling and is definitely one of the most smartly and consistently written shows of our time", True)
+                      </div>
+                    </div>
+                    
+                    <div class="review card-body border rounded mb-2">
+                      <div class="review-text">
+                        ('Dark is one of those rarely-seen lightning strikes of audiovisual storytelling. Intelligent and immaculate on paper, clockwork-precise in execution, and a sensory feast to watch and listen to, this is one of the best things you will find on Netflix right now (streaming, in general, is becoming the go-to haven for smart, original content). To do justice how elaborate it is, I must spoil some things that are best left a surprise for new viewers, so read this at your own peril.Oft labeled a "German Stranger Things", this is something entirely else; a painstakingly crafted science-fiction narrative where the rules stay intact through even the most bewildering time loops, and all the dozens of characters, each played by three actors tops, are fleshed out over the span of 66 years (initially) and display faults which make them hard to like but easy to identify as human beings. My only complaints involve expository bits of dialogue concerning their relationships, but frankly, we may have been at a loss without them.We begin in the year 2019, in the small town of Winden; a seemingly wholesome community with secrets beneath its surface. A man has mysteriously killed himself and a child has gone missing in the woods, not far from the shady nuclear power plant. Soon thereafter, so too does little Mikkel (Daan Liebrenz), the son of local policeman Ulrich Nielsen (Oliver Masucci) and school principal Katharina (Jördis Triebel), go missing near that same spot. Precisely 33 years ago, we learn, something similar happened to Ulrich\'s younger brother. Something else that happened in Winden 33 years ago, curiously, was the appearance of a small child who claimed he was from the future.This is barely the beginning of what this show is about; no individual plotline is inessential filler, as they all concern how humans evolve and connect with one another over decades, thereby all serving the overarching themes (on top of impacting the timeline in their own ways). Police officer Charlotte Doppler (Karoline Eichhorn), a colleague of Ulrich, begins to suspect her husband Peter (Stephan Kampwirth) is involved with the disappearances, as might her demented father-in-law (Herrman Beyer), once employed by the plant. Young Jonas (Louis Hoffman), the traumatized son of the man who hung himself, investigates the enigmatic cave where Mikkel was lost. Jonas\' mother Hannah (Maja Schöne) has an affair with Ulrich, seemingly attempting to fill the void, but we learn there is far more to that particular story.Jonas crushes on Mikkel\'s big sister Martha (Lisa Vicari), who discovered a new lover in Bartosz (Paul Lux), son of power plant director Aleksander Tiedemann (Peter Benedict), while Jonas was going through rehab after his father\'s suicide. There is also Mikkel and Martha\'s brother Magnus (Moritz Jahn), who takes an interest in Franziska Doppler (Gina Stiebitz), daughter of Charlotte. A shadowy Stranger (Andreas Pietschmann) comes to the hotel of Aleksander\'s wife Regina (Deborah Kaufmann), who had her own drama with Ulrich during their tweenage years. Regina\'s mother, once in charge of the power plant, is presumed dead. While this is all happening, an ominous figure named "Noah" is alluded to, his Biblical moniker not accidental; Charlotte\'s mute daughter (Carlotta von Falkenhayn) is seemingly the first to notice his presence. I still feel like I\'ve only started, although in spite of providing a spoiler warning, I shall give no more ties away.I would, if possible, erase the show from my memory just so I can experience it for the first time again; how it unfolds, how all the connections reveal themselves, and how each piece is in place by the end, albeit with new riddles for next season. I suppose I can mention the existence of a secret portal; a link between the years 1953, 1986, and 2019. I can also tell you that the show seems to work according to the "preordained time" rules. There are several time loops that suggest each journey to the past was meant to be. Fate, nature vs. Nurture, and man\'s free will (basically all those difficult questions which only the least knowing of humans claim to know the answer to) are avidly discussed, particularly amongst The Stranger and clockmaker-turned-author H. G. Tannhaus. "Gott ist Zeit. Und die Zeit ist nicht barmherzig."The eras also seem to be synchronized in terms of time passage. Translation: If you go to the year 1986, and remain there for, say, an hour, an hour will indeed have passed when you return to 2019. You cannot elect to return to the same second of 2019 that you left, for example (the characters can, at first, only travel precisely 33 years back or forth in time, hence we initially avoid such common questions as "Why don\'t they go to this date?"). When 33 years have passed in the 50\'s storyline, said storyline will obviously have reached the "start" of the 80\'s storyline, just as the 80\'s storyline will have reached the "start" of the 2019 storyline; the date of the cataclysmic event that connected the different time periods. If each story/time period is represented by a straight horizontal line on a piece of paper, that then continues on the next row and so logically becomes the "next" storyline, the event that creates the bridge could be visualized as a vertical line, crossing all three of the other lines, connecting with each at the exact same point. The event occurs every 33 years, but due to the time link, these instances are also simultaneous. Confused? Most likely, but the immense thought put into how the time travel functions is certainly worth noting - and this is all just season 1.My point is this: there are several shows and films where you\'re advised not to think too hard about the time travel logic. Even in my glowing review of Back to the Future from four years ago, I noted that the films succeed mainly in terms of story beats, character development, and emotional resonance, while ultimately not being wholly consistent with their time travel rules. With Dark, it is actually rewarding to think about the logic.This is courtesy of an intricate script, but Dark also mops the floor with its peers in terms of performances, camera work (there are several lengthy takes wherein every actor hits every beat, little ones included), nifty editing that helps communicate the connections (even if the writing still expects full audience attentiveness, which I appreciate) and soundtrack; the songs solidify the mood and atmosphere while being largely unknown and avant-garde.I feel I may be overselling the series and I surely hope this post doesn\'t create downright unreasonable expectations. But I really, really hope you all watch this and I really, really hope you see what I see!', True)
+                      </div>
+                    </div>
+                    
+                    <div class="review card-body border rounded mb-2">
+                      <div class="review-text">
+                        ("The show can be rather slow and can often feel like it's going to take the approach of lost leaving questions unanswered, but it does all lead somewhere and it's an intriguing time travel thriller/mystery with some amazing performances. The show drags at times but the script and the actors more than make up for it. One word of caution though. Do not watch the English dub. It's terrible. It feels like amateur, emotionless actors reading a script for the first time. If you're not watching the original German dub then you're doing yourself a massive disservice. Was really surprised to see critics giving it such low scores and comparing it to Stranger Things. I don't see any connection or reason to compare it to Stranger Things. The closest I can come up with is that is reminds me of the eerie feeling of Donnie Darko. It's totally a high end series which can compete with some other Netflix shows.The pace and jumps between story arcs is excellent. I was hooked from the beginning to end. 9/10", False)
+                      </div>
+                    </div>
+                    
+                    <div class="review card-body border rounded mb-2">
+                      <div class="review-text">
+                        ("I highly recommend this show. I don't want to compare it to any other show but it reminded me of Twin Peaks in terms of its darkness. Each episode raises audiences' suspense, which is a good thing. However, you should note every character's name on a paper, prepare a family tree otherwise it will be harder to remember. Great show!!", False)
+                      </div>
+                    </div>
+                    
+                    <div class="review card-body border rounded mb-2">
+                      <div class="review-text">
+                        ('I am serious!This show will be talked about for years and years.And imagine it will be one more season of this!!If someone can top this in this genre - I will definitely give it 11/10\n(Sooo - not possible)', False)
+                      </div>
+                    </div>
+                    
+                    <div class="review card-body border rounded mb-2">
+                      <div class="review-text">
+                        ('It\'s easy to recognize the parallels between "Stranger Things" and "Dark". Sure there are some: the disappearance of a little boy, 80\'s influences, dark soundtracks. But in many ways it does the opposite of what "Stranger Things" does. It doesn\'t work with likable characters. Nostalgia is not something you will find here. It\'s just a deep dark show, which has much to offer to people who love psychological horror, without the gory parts. This show is not for everyone. I think the best comparison to make is with "Twin Peaks". A show that leaves you behind every episode with a big what-the-f*ck feeling. The constant eerie feeling, as if someone is constantly playing with your thoughts. My god the creators do everything so right. It has been a long time since I have seen something so original, and executed so well.I\'m pretty sure this show will live up, and will be right there between the greatest cult classics.', True)
+                      </div>
+                    </div>
+                    
+                    <div class="review card-body border rounded mb-2">
+                      <div class="review-text">
+                        ("Best show I've ever watched. Every aspect of it looks spectacular. It's new , different, unique, confusing at times, thrilling, suspenseful, gripping, beautifully well acted, bit of romantic at the same time.\nCompletely changed the Idea of time travel into my head. I don't think any other time travel thing will excite me more than DARK from now on.", False)
+                      </div>
+                    </div>
+                    
+                    <div class="review card-body border rounded mb-2">
+                      <div class="review-text">
+                        ("Gritty. Complicated. Emotionally bare knuckled.That's just the drama involving several families in the ill-fated town of Winden as they deal with the strange disappearance of several children. You have the normally twisted mess of a small-town where everyone knows everyone else and how they all end up making bad choices and try and keep sordid secrets from one another......But then you add to the mix the fact that their squabbles span at more than one Time zone. And they don't even realize it!As an American Viewer, I am awed at the performances of every actor. And I am in awe of the tenacity of the Writers and Producers for even attempting to tell a multi-phasic drama convoluted by Time Travel.What makes it work masterfully is NOT the Time Travel aspect... It's the wrenching personal dramas of ordinary folks who aren't even aware just how screwed up their world actually is because of interlocking causalities that keep folding back on themselves...That's the amazing Puzzle for the Viewer. You will find yourself just PAUSING the show as you sit back and try and connect the dots: Who is with Who and WHEN?Warning! You will Need to KEEP TRACK OF ALL THE CHARACTERS!", False)
+                      </div>
+                    </div>
+                    
+                    <div class="review card-body border rounded mb-2">
+                      <div class="review-text">
+                        ("All 3 seasons are phenomenal and very well executed. The storyline is so complex yet extremely interesting to watch. Thank God for Netflix that I could watch this show from Germany. What an amazing amazing show. I'd highly recommend this show to anyone who is interested in learning more about new concepts and unique storylines. 10 stars!!!!!!!!", True)
+                      </div>
+                    </div>
+                    
+                    <div class="review card-body border rounded mb-2">
+                      <div class="review-text">
+                        ("I won't get into details b/c you already watch the show and know how absolutely insane it is. Just a couple of suggestions.... Watch both seasons at least TWICE. I'm actually on my third go round. Definitely watch with subtitles. The english dubbing takes away the intense drama of the show. Season 3 drops in a couple of weeks. Apparently the last! I'm happy and bummed. I love these characters and the plot so much, I never want it to end. That being said, I'm glad I know there's a definitive ending. Lastly a word to Hollywood: ARE YOU PAYING ATTENTION? Germany just kicked your ass! This is real storytelling. This makes the audience have to pay attention to every little nuance. We are smarter than you think. This is art. If you don't get on the ball, you'll be left in the dustbin of history.....", False)
+                      </div>
+                    </div>
+                    
+                    <div class="review card-body border rounded mb-2">
+                      <div class="review-text">
+                        ("It's rating should be between 9.5-10. because this series is so f**king great. No one should regret watching this. Don't think too much on watching this, just go &amp; watch with almost attention. Get all the characters &amp; time lines in mind , then it's easy to watch", False)
+                      </div>
+                    </div>
+                    
+                    <div class="review card-body border rounded mb-2">
+                      <div class="review-text">
+                        ('(Apart from the last segment, this review is completely spoiler-free)It\'s amusing that approximately 10 days ago I didn\'t even know about this show. Well that\'s an exaggeration as I was aware that this strange German science fiction series, often labelled as the non-English Language Stranger Things, was on Netflix. I\'ve been meaning to watch it for a while now, but constantly I\'ve put it aside for a later date.But when the final season was announced I knew I have to finally just freaking do it. I binged the whole thing in 4 days right before season 3 dropped. And damn I had no idea what I was getting into. I had no idea that in 10 days I was going to experience something so earthshatteringly mindbending. Dark makes me believe that time travel truly exists. The human who wrote this must\'ve come from the future as there\'s no way how anyone who is not superhuman born million years from now can come up with a story like this. It\'s baffling. Obviously you can create a knot of a plot but most likely you are going to write yourself into corner you\'ll never get out of. But these freaking writers knew how to write a show. It shows that this was the story they were always meaning to tell.I am baffled why I have come around to this show only now. This thing is tailor-made for me. I am a huge science fiction fan and Dark checks off every box when it comes to the great scifi stories. It\'s well made, particularly in the last season Dark is enchantingly pretty to look at. Score is memorable. You cannot ever skip the intro. It\'s beautifully directed, you can\'t just have a good script, it needs to be executed professionally on screen to achieve its full potential, which Dark does. First season had its few shaky moments, but excluding those writing and acting are very strong. Its mythology is massive. It has twists that blow your brain. It asks big, complex questions but has the necessary human component as well. It\'s extremely rewatchable. Time travel has been done to death but the approach Dark takes is original and something that has never been done before.Please watch this show, don\'t let the German language and subtitles scare you!(Minor spoiler-filled segment about the ending of the show. I vaguely describe it, you can read the most of it without show being ruined for you but I warn that the very last segment is a massive spoiler!)Speaking about the human component, one reason why this show utterly impressed me is how well it handled its ending. Obviously there are shows out there which ended really well. The series finale of Breaking Bad is fantastic, don\'t get me wrong. The story of Walter White is perfect, don\'t get me wrong. But it\'s not as complicated like Dark. The fact that a show like this ended so well is unheard of. Some were disappointed that the ending was fairly simple, I personally loved that. I love every time when a conclusion for a complex story is simple and emotional. As stated before, the emotional depth makes scifi work. Therefore the conclusion is so satisfying. I for sure needed tissues. Now I look at the whole thing and think to myself "man what a great story".Whether the ending is good or bad, I am always incredibly sad when a great show ends. I am over and over again dreading that feeling of inevitable emptiness when I start a new tv-series. But it does indeed help when a show completely sticks the landing and I know that I\'ve experienced something special. That a great ending would solidify a show as legendary.The overused word "underrated" has been linked to Dark a lot of times. While it may not get the recognition it deserves now, the show will not get lost in a shuffle. It will be rewatched endlessly and discovered by new fans, I am sure of that. The world may have forgotten that Jonas and Martha ever existed, but the world will never forget about Dark.', True)
+                      </div>
+                    </div>
+                    
+                    <div class="review card-body border rounded mb-2">
+                      <div class="review-text">
+                        ('I doubt there is a natural person on earth who did understand 100% of this', False)
+                      </div>
+                    </div>
+                    
+                    <div class="review card-body border rounded mb-2">
+                      <div class="review-text">
+                        ('Captivating , Mind boggling , out of the world experience. I can strongly say, this is one of the greatest shows ever made till date and it may even stand top in the list. I just bow down to the creators of Dark " Baran bo Odar and Jantje Friese " for churning out a series like Dark , because it needs a genius touch to narrate a complex story. The depth and complexity involved in this series is something I have never seen and yet they managed to pull it off perfectly by unraveling the thread layer by later in the last season, Master stroke 🔥 I know, there are people who complain about the show being slow in the season1 and yes, it is but you can\'t expect everything to fall in place to entertain you from the word go. You just need to allow the creators to establish the story, characters to get into our nerves. It deserves more appreciation and recognition as other top shows. JUST WATCH IT.', True)
+                      </div>
+                    </div>
+                    
+                    <div class="review card-body border rounded mb-2">
+                      <div class="review-text">
+                        ("'Dark' is one of the series that I was waiting for it to finish, to actually write about it.Throughout the seasons, especially 1 and 2, and then the last installment, the overwhelming feeling that I was having most of all, was the high level of complexity of the show. To me, that was the most complex series that I've ever watched with enormous twists and turns, and I'm actually talking positively.\nIMO that's the work of a genius mind, with a so shiny and deep of a screenplay and plots that few will ever surpass it.Superb and ultra-deep storyline, development, depiction of characters' backgrounds and related plots.Amazing cinematography, filming, depiction of scenes and timelines.Awesome acting and casts' performances. Adults, teens and children alike.Amazing music and soundtracks throughout.Quality was maintained evenly throughout its seasons, which is a huge plus. (loved seasons 1 and 2 more though)No negative anything comes to mind IMO, which is amazing by itself.Watched the dubbed version. Would love to try it with the original Deutsch language and ENG subtitles. The few times that I listened to it, I noticed that it had more character and force to it with way more realistic and natural voices and emotional speaking. The English dubbing was too soft most of the times, but very well-done nevertheless.On a final note, truthfully speaking, Dark has nothing in common with Stranger Things (honestly, the disappearance stuff doesn't count). It's on another level with more seriousness, depth and a completely different screenplay and vibe.\nBoth are awesome in their own merits, but please, do not compare or cross-judge them.", True)
+                      </div>
+                    </div>
+                    
+                    <div class="review card-body border rounded mb-2">
+                      <div class="review-text">
+                        ('Netflix list this as a "teen" series. I think any discerning watcher of any age will get a lot out of this dark, compelling mystery. Set in a small German town where weird things are happening, it\'s a mind bending, time shifting saga with each character given weight and importance. The acting is first rate, especially the young actors portraying the kids. This is not "Stranger Things" Euro style - its nothing like it. Eerie and intelligent, you have to really concentrate on the narrative to get all the nuances of the plot and characters. Very, very good. A solid 8 from me and I\'m really harsh with my ratings! I\'m two episodes into Season 2, and it\'s as good as Season 1, so far. More mysteries unfolding and characters you really care about. Recommended.', True)
+                      </div>
+                    </div>
+                    
+                    <div class="review card-body border rounded mb-2">
+                      <div class="review-text">
+                        ('It is a tremendous story based on the German physical and philosophical perspective: Nietzsche and Einstein and their conception of time. The casting, dialogues, photography, pace, soundtrack, nostalgia, costume design are beyond perfection. The best thing Netflix has ever ever done.', False)
+                      </div>
+                    </div>
+                    
+                    <div class="review card-body border rounded mb-2">
+                      <div class="review-text">
+                        ("How is this show only 8.7/10 ??If I can give it an 11/10 I totally would without hesitation, possibly the best show I've ever seen", False)
+                      </div>
+                    </div>
+                    
+                    <div class="review card-body border rounded mb-2">
+                      <div class="review-text">
+                        ('"DARK" is 1 of, if not the best T.V series I have ever watched. If you are going to watch this series, you must commit 100% of your attention to each and every minute. If you can\'t do that, don\'t bother watching it because you\'ll be well and truly lost by season 3. This is a Must Watch for those who really enjoy T.V and film.', False)
+                      </div>
+                    </div>
+                    
+                    
+                </div>
+              </div>
+            </div> -->
+
+
+
+              {% if data.reviews.status %}
+              {% for review in data.reviews.reviews %}
+              <div style="max-height: 400px; overflow-y:scroll;" class="review card-body border rounded mb-2">
+                {% if review[1] %}
+                <div class="bg-danger badge-danger badge h5">
+                  Spoiler Alert!
+                </div>
+                {% endif %}
+                <div class="review-text">
+                  {{review[0]}}
+                </div>
+              </div>
+              {% endfor %}
+              {% else %}
+              <div class="text-muted text-center fw-500">
+                No reviews are available
+              </div>
+              {% endif %}
+          </div>
+        </div>
+            
+          
+
+      <!-- row container ends -->
+      </div>
+    </div>
+
+
+    <script>
+      function displayLoader(ele,bin){
+        if (bin === 1){
+          ele.querySelector(".loader").classList.remove("d-none");
+        }
+        else{
+          ele.querySelector(".loader").classList.add("d-none");
+        }
+      }
+    </script>
+  </body>
+</html>

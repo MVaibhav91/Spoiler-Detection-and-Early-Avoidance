@@ -1,0 +1,152 @@
+.form-control:focus {
+    box-shadow: none;
+    outline: none;
+  }
+
+  .btn:focus,
+  .btn:active {
+    box-shadow: none;
+    outline: none;
+  }
+
+  .comment-box {
+    resize: None;
+    height: 200px;
+    border: None;
+  }
+
+  .comment-form {
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .btn-ex {
+    background: #8E44AD;
+    font-weight: 500;
+    border-radius: 0 0 20px 20px;
+    width: 100%;
+  }
+
+  .text-ex {
+    /* color: #8E44AD; */
+    font-weight: bold;
+    background: -webkit-linear-gradient(#F31223, #CF0808);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .opacity-25 {
+    position: relative;
+  }
+
+  .loader {
+    position: absolute;
+    top: 50%;
+    z-index: 1;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 500;
+  }
+
+  .bg-dark {
+    color: white;
+  }
+
+  .sidebox .result:hover {
+    cursor: pointer;
+    background-color: rgb(46, 45, 45);
+    /* box-shadow: 0 0 1px rgba(255, 255, 255, 0.901);  */
+  }
+
+  .sidebox .search-results img {
+    width: 100%;
+    height: 84px;
+    object-fit: cover;
+  }
+
+  .fw-500 {
+    font-weight: 500;
+  }
+
+  .show img {
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+  }
+
+  .menu {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    /* transform: translate(-50%); */
+    z-index: 100;
+  }
+
+  .main {
+    margin-top: 10%;
+  }
+
+  .sideblock {
+    position: fixed;
+    top: 16%;
+    bottom: 9%;
+    left: 5%;
+    height: 80%;
+    overflow-Y: scroll;
+    /* margin-top: %; */
+    width: 25%;
+    z-index: 100;
+
+  }
+
+  .sideblock .result:hover {
+    cursor: pointer;
+    /* background-color: rgb(46, 45, 45); */
+    box-shadow: 0 0 1px rgba(255, 255, 255, 0.901); 
+  }
+
+  .sideblock .search-results img {
+    width: 100%;
+    height: 84px;
+    object-fit: cover;
+  }
+
+  .sideblock::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .sideblock {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+  }
+
+  .review{
+    position: relative;
+    height: 300px;
+    overflow-y: hidden;
+  }
+
+  .border-l{
+    border: 3px solid red;
+  }
+
+  .spoiler-alert{
+    position: absolute;
+    top:50%;  
+    left:50%;
+    transform: translate(-50%,-50%);
+  }
+
+  .spoiler-alert:hover{
+    cursor: pointer;
+  }
+
+  .collapser{
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+  }

@@ -1,0 +1,40 @@
+<div>
+    {% if data.reviews.status %}
+    {% for review in data.reviews.reviews %}
+
+
+    {% if review[1] %}
+    <div class="review border-l card-body rounded mb-2 shadow-sm">
+        <div onClick="viewSpoiler(event)" class="spoiler-alert text-center">
+            <div class="text-danger fw-bolder">This review may contain spoilers</div>
+            <div class="my-2">
+                Tap <span class="fw-bold text-primary"><u>here</u></span> to read
+            </div>
+        </div>
+        <div class="review-text position-relative d-none position-relative">
+            {{review[0]}}
+        </div>
+        <div class="collapser">
+            <button onClick="expandReview(event)"
+                class="btn btn-primary btn-sm text-white text-primary mx-auto fw-500 mb-2">Read more</button>
+        </div>
+    </div>
+    {% else %}
+    <div class="review border card-body rounded mb-2 shadow-sm">
+        <div class="review-text position-relative position-relative">
+            {{review[0]}}
+        </div>
+        <div class="collapser">
+            <button onClick="expandReview(event)"
+                class="btn btn-primary btn-sm text-white text-primary mx-auto fw-500 mb-2">Read more</button>
+        </div>
+    </div>
+    {% endif %}
+
+    {% endfor %}
+    {% else %}
+    <div class="text-muted text-center fw-500">
+        No reviews are available
+    </div>
+    {% endif %}
+</div>
